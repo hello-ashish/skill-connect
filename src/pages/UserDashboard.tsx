@@ -1,10 +1,9 @@
 import { useState, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, MapPin, SlidersHorizontal, Star, Heart, ArrowLeft, IndianRupee } from 'lucide-react';
+import { Search, SlidersHorizontal, ArrowLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { mockWorkers } from '@/data/mockWorkers';
@@ -38,12 +37,12 @@ const UserDashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+      <header className="sticky top-0 z-50 bg-background/70 backdrop-blur-xl border-b border-border/50">
         <div className="container mx-auto flex items-center h-16 px-4 gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate('/')}>
+          <Button variant="ghost" size="icon" onClick={() => navigate('/')} className="shrink-0">
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <Link to="/" className="text-xl font-display font-bold text-primary">
+          <Link to="/" className="text-xl font-display font-bold text-primary shrink-0">
             Apni<span className="text-secondary">Job</span>
           </Link>
           <div className="flex-1 max-w-md ml-auto relative">
@@ -52,14 +51,14 @@ const UserDashboard = () => {
               placeholder="Search by name or skill..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-muted/50 border-border/50"
             />
           </div>
           <Button
             variant="outline"
             size="icon"
             onClick={() => setShowFilters(!showFilters)}
-            className={showFilters ? 'bg-accent' : ''}
+            className={`shrink-0 ${showFilters ? 'bg-accent border-primary/30' : ''}`}
           >
             <SlidersHorizontal className="h-4 w-4" />
           </Button>
@@ -76,7 +75,7 @@ const UserDashboard = () => {
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden mb-6"
             >
-              <div className="bg-card rounded-xl border border-border p-6 grid sm:grid-cols-3 gap-6">
+              <div className="bg-card rounded-2xl border border-border/60 p-6 grid sm:grid-cols-3 gap-6 shadow-card">
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">Skill</label>
                   <Select value={selectedSkill} onValueChange={setSelectedSkill}>
@@ -103,7 +102,7 @@ const UserDashboard = () => {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-foreground mb-2 block">
-                    Price: ₹{priceRange[0]} - ₹{priceRange[1]}/hr
+                    Price: ₹{priceRange[0]} – ₹{priceRange[1]}/hr
                   </label>
                   <Slider
                     min={0}
@@ -119,20 +118,20 @@ const UserDashboard = () => {
           )}
         </AnimatePresence>
 
-        {/* Results */}
+        {/* Results header */}
         <div className="flex items-center justify-between mb-6">
-          <p className="text-muted-foreground">
-            <span className="font-semibold text-foreground">{filteredWorkers.length}</span> workers found
+          <p className="text-sm text-muted-foreground">
+            Showing <span className="font-semibold text-foreground">{filteredWorkers.length}</span> workers
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredWorkers.map((worker, i) => (
             <motion.div
               key={worker.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
+              transition={{ delay: i * 0.04 }}
             >
               <WorkerCard
                 worker={worker}
@@ -145,8 +144,10 @@ const UserDashboard = () => {
         </div>
 
         {filteredWorkers.length === 0 && (
-          <div className="text-center py-20">
-            <Search className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+          <div className="text-center py-24">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-muted mb-4">
+              <Search className="h-7 w-7 text-muted-foreground" />
+            </div>
             <h3 className="text-xl font-display font-semibold text-foreground mb-2">No workers found</h3>
             <p className="text-muted-foreground">Try adjusting your filters or search query</p>
           </div>
